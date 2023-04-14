@@ -1,4 +1,12 @@
 package com.crud.testeassetiva.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.crud.testeassetiva.model.Cliente;
+import com.crud.testeassetiva.repository.ClienteRepository;
+
 @Service
 public class ClienteService {
 

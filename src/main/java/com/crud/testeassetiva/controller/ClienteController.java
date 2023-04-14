@@ -1,60 +1,53 @@
+package com.crud.testeassetiva.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.crud.testeassetiva.model.Cliente;
+import com.crud.testeassetiva.service.ClienteService;
+
 @RestController
 @RequestMapping("/clientes")
+@Validated
 public class ClienteController {
 
-    private final ClienteService clienteService;
+    @Autowired
+    private ClienteService clienteService;
 
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
+    @GetMapping
+    public ResponseEntity<List<Cliente>> getClientes() {
+        List<Cliente> clientes = clienteService.listarTodos();
+        return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Cliente> getClienteById(@PathVariable("id") Long id) throws Exception {
         Cliente cliente = clienteService.buscarPorId(id);
-        if (cliente != null) {
-            return ResponseEntity.ok(cliente);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping
-    public List<Cliente> listarClientes(@RequestParam(required = false) String ddd,
-                                        @RequestParam(required = false) String nome) {
-        if (ddd != null) {
-            return clienteService.listarPorDddCelular(ddd);
-        } else if (nome != null) {
-            return clienteService.listarPorNome(nome);
-        } else {
-            return clienteService.listarTodos();
-        }
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
-        Cliente clienteSalvo = clienteService.salvar(cliente);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(clienteSalvo.getId()).toUri();
-        return ResponseEntity.created(uri).body(clienteSalvo);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente clienteAtualizado = clienteService.atualizar(id, cliente);
-        if (clienteAtualizado != null) {
-            return ResponseEntity.ok(clienteAtualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Cliente> addCliente(@Valid @RequestBody Cliente cliente) throws Exception {
+        cliente = clienteService.salvar(cliente);
+        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
-        boolean clienteDeletado = clienteService.deletar(id);
-        if (clienteDeletado) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteCliente(@PathVariable("id") Long id) throws Exception {
+        clienteService.deletar(id);
+        return new ResponseEntity<>("Cliente removido com sucesso.", HttpStatus.OK);
     }
 }

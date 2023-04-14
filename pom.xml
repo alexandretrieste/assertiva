@@ -5,15 +5,15 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>projeto-api-clientes</artifactId>
-	<version>1.0.0</version>
+	<groupId>com.crud.testeassetiva</groupId>
+	<artifactId>teste-assetiva</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
 		<java.version>11</java.version>
 		<spring-boot.version>2.6.2</spring-boot.version>
 		<mariadb.version>2.7.3</mariadb.version>
-		<hikaricp.version>4.1.0</hikaricp.version>
+		<dbcp2.version>2.9.0</dbcp2.version>
 	</properties>
 
 	<dependencies>
@@ -23,15 +23,18 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
+
+		<!-- Bean Validation dependency -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 			<version>${spring-boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-			<version>${hikaricp.version}</version>
 		</dependency>
 
 		<!-- MariaDB dependency -->
@@ -39,6 +42,13 @@
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 			<version>${mariadb.version}</version>
+		</dependency>
+
+		<!-- Commons DBCP2 dependency -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>${dbcp2.version}</version>
 		</dependency>
 
 		<!-- JUnit dependencies -->
@@ -53,6 +63,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring-boot.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
 		</dependency>
 	</dependencies>
 
