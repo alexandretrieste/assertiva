@@ -1,5 +1,4 @@
 package com.crud.testeassetiva.service;
-
 @Service
 public class ClienteService {
 
@@ -25,7 +24,7 @@ public class ClienteService {
         return clienteRepository.listarPorNome(nome);
     }
 
-    public Cliente salvar(Cliente cliente) {
+    public Cliente salvar(Cliente cliente) throws Exception {
         if (cliente.getId() != null) {
             throw new IllegalArgumentException("Não é possível salvar um cliente que já possui ID.");
         }
@@ -33,7 +32,7 @@ public class ClienteService {
         return clienteRepository.salvar(cliente);
     }
 
-    public Cliente atualizar(Long id, Cliente cliente) {
+    public Cliente atualizar(Long id, Cliente cliente) throws Exception {
         if (!id.equals(cliente.getId())) {
             throw new IllegalArgumentException("ID do cliente a ser atualizado difere do ID fornecido.");
         }
@@ -45,8 +44,33 @@ public class ClienteService {
         return clienteRepository.deletar(id);
     }
 
-    private void validarCliente(Cliente cliente) {
-        // Validar CPF, nome, celulares e e-mails do cliente aqui
-        // Lançar uma exceção caso algum campo seja inválido
+    private void validarCliente(Cliente cliente) throws Exception {
+        if (cliente.getCpf() == null || !cliente.getCpf().matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+            throw new Exception("CPF inválido");
+        }
+
+        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
+            throw new Exception("Nome inválido");
+        }
+
+        if (cliente.getCelulares() == null || cliente.getCelulares().isEmpty()) {
+            throw new Exception("Pelo menos um celular deve ser informado");
+        } else {
+            for (String celular : cliente.getCelulares()) {
+                if (celular == null || !celular.matches("\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}")) {
+                    throw new Exception("Celular inválido");
+                }
+            }
+        }
+
+        if (cliente.getEmails() == null || cliente.getEmails().isEmpty()) {
+            throw new Exception("Pelo menos um e-mail deve ser informado");
+        } else {
+            for (String email : cliente.getEmails()) {
+                if (email == null || !email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
+                    throw new Exception("E-mail inválido");
+                }
+            }
+        }
     }
 }
