@@ -1,10 +1,10 @@
-package com.crud.testeassetiva;
+package com.crud.testeassertiva;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TesteAssetivaApplicationTests {
+class TesteAssertivaApplicationTests {
 
 	@Test
 	void contextLoads() {

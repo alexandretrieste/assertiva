@@ -1,6 +1,6 @@
-package com.crud.testeassetiva.repository;
+package com.crud.testeassertiva.repository;
 
-import com.crud.testeassetiva.model.Cliente;
+import com.crud.testeassertiva.model.Cliente;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,7 +35,7 @@ public class ClienteRepository {
 
     public List<Cliente> listarPorDddCelular(String ddd) {
         String query = "SELECT * FROM clientes WHERE celulares LIKE ?";
-        return jdbcTemplate.query(query, new Object[]{"%" + ddd + "%"}, new ClienteRowMapper());
+        return jdbcTemplate.query(query, new Object[]{ddd + "%"}, new ClienteRowMapper());
     }
 
     public List<Cliente> listarPorNome(String nome) {
@@ -68,6 +68,12 @@ public class ClienteRepository {
         } else {
             return null;
         }
+    }
+
+    public Cliente atualizar(Cliente cliente) {
+        String query = "UPDATE clientes SET cpf = ?, nome = ?, celulares = ?, emails = ? WHERE id = ?";
+        jdbcTemplate.update(query, cliente.getCpf(), cliente.getNome(), String.join(",", cliente.getCelulares()), String.join(",", cliente.getEmails()), cliente.getId());
+        return cliente;
     }
 
     public boolean deletar(Long id) {

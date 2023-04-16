@@ -1,4 +1,4 @@
-package com.crud.testeassetiva.model;
+package com.crud.testeassertiva.model;
 
 import java.util.List;
 import java.util.Objects;

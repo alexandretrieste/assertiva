@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: assertivaDB
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ""
+      MYSQL_ROOT_PASSWORD: ""
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - assetiva
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/assertivaDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    depends_on:
+      - db
+    networks:
+      - assetiva
+
+networks:
+  assetiva:
+
+volumes:
+  db_data:

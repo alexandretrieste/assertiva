@@ -1,11 +1,11 @@
-package com.crud.testeassetiva.service;
+package com.crud.testeassertiva.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.crud.testeassetiva.model.Cliente;
-import com.crud.testeassetiva.repository.ClienteRepository;
+import com.crud.testeassertiva.model.Cliente;
+import com.crud.testeassertiva.repository.ClienteRepository;
 
 @Service
 public class ClienteService {
@@ -40,12 +40,12 @@ public class ClienteService {
         return clienteRepository.salvar(cliente);
     }
 
-    public Cliente atualizar(Long id, Cliente cliente) throws Exception {
-        if (!id.equals(cliente.getId())) {
-            throw new IllegalArgumentException("ID do cliente a ser atualizado difere do ID fornecido.");
+    public Cliente atualizar(Cliente cliente) throws Exception {
+        if (cliente.getId() == null) {
+            throw new IllegalArgumentException("O ID do cliente não pode ser nulo.");
         }
         validarCliente(cliente);
-        return clienteRepository.atualizar(id, cliente);
+        return clienteRepository.atualizar(cliente.getId(), cliente);
     }
 
     public boolean deletar(Long id) {
@@ -53,28 +53,41 @@ public class ClienteService {
     }
 
     private void validarCliente(Cliente cliente) throws Exception {
-        if (cliente.getCpf() == null || !cliente.getCpf().matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+        validarCpf(cliente.getCpf());
+        validarNome(cliente.getNome());
+        validarCelulares(cliente.getCelulares());
+        validarEmails(cliente.getEmails());
+    }
+
+    private void validarCpf(String cpf) throws Exception {
+        if (cpf == null || !cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
             throw new Exception("CPF inválido");
         }
+    }
 
-        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
+    private void validarNome(String nome) throws Exception {
+        if (nome == null || nome.trim().isEmpty()) {
             throw new Exception("Nome inválido");
         }
+    }
 
-        if (cliente.getCelulares() == null || cliente.getCelulares().isEmpty()) {
+    private void validarCelulares(List<String> celulares) throws Exception {
+        if (celulares == null || celulares.isEmpty()) {
             throw new Exception("Pelo menos um celular deve ser informado");
         } else {
-            for (String celular : cliente.getCelulares()) {
-                if (celular == null || !celular.matches("\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}")) {
+            for (String celular : celulares) {
+                if (celular == null || !celular.matches("\\d{2}\\d{9}")) {
                     throw new Exception("Celular inválido");
                 }
             }
         }
+    }
 
-        if (cliente.getEmails() == null || cliente.getEmails().isEmpty()) {
+    private void validarEmails(List<String> emails) throws Exception {
+        if (emails == null || emails.isEmpty()) {
             throw new Exception("Pelo menos um e-mail deve ser informado");
         } else {
-            for (String email : cliente.getEmails()) {
+            for (String email : emails) {
                 if (email == null || !email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
                     throw new Exception("E-mail inválido");
                 }
